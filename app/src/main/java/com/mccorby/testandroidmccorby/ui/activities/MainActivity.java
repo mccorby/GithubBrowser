@@ -1,15 +1,15 @@
 package com.mccorby.testandroidmccorby.ui.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mccorby.testandroidmccorby.ChallengeAppComponent;
 import com.mccorby.testandroidmccorby.R;
 import com.mccorby.testandroidmccorby.ui.fragments.RepositoryListFragment;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +21,18 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.container, new RepositoryListFragment())
                     .commit();
         }
+    }
+
+    @Override
+    protected void setupComponent(ChallengeAppComponent appComponent) {
+/*
+        DaggerMainComponent.builder()
+                .appComponent(appComponent)
+                .mainModule(new MainModule(this))
+                .build()
+                .inject(this);
+*/
+
     }
 
     @Override

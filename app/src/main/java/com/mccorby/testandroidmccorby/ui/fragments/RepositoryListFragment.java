@@ -14,31 +14,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mccorby.testandroidmccorby.ChallengeApp;
 import com.mccorby.testandroidmccorby.R;
-import com.mccorby.testandroidmccorby.datasource.CacheDatasourceImpl;
-import com.mccorby.testandroidmccorby.datasource.FileDatasourceImpl;
-import com.mccorby.testandroidmccorby.datasource.NetworkDatasourceImpl;
 import com.mccorby.testandroidmccorby.domain.entities.Repository;
-import com.mccorby.testandroidmccorby.domain.interactors.RequestRepositoriesInteractor;
-import com.mccorby.testandroidmccorby.domain.interactors.RequestRepositoriesInteractorImpl;
-import com.mccorby.testandroidmccorby.domain.repository.RepositoriesRepository;
-import com.mccorby.testandroidmccorby.repository.RepositoriesRepositoryImpl;
-import com.mccorby.testandroidmccorby.repository.datasource.CacheDatasource;
-import com.mccorby.testandroidmccorby.repository.datasource.NetworkDatasource;
 import com.mccorby.testandroidmccorby.ui.adapters.RepoListAdapter;
 import com.mccorby.testandroidmccorby.ui.presenters.MainPresenter;
-import com.mccorby.testandroidmccorby.ui.presenters.MainPresenterImpl;
 import com.mccorby.testandroidmccorby.ui.views.MainView;
 
-import java.io.IOException;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class RepositoryListFragment extends Fragment implements MainView, RepoListAdapter.OnLongClickListener {
 
+    @Inject
     MainPresenter mPresenter;
+
     private RepoListAdapter mAdapter;
 
     public RepositoryListFragment() {
@@ -69,24 +63,11 @@ public class RepositoryListFragment extends Fragment implements MainView, RepoLi
         super.onAttach(activity);
         // Activity is rolling... we can create the objects we need
         // NOTE: The following method would not be necessary if using Dependency Injection
-        injectObjects();
-    }
-
-    private void injectObjects() {
-        // Note: Due to problems to connect to github API, the network datasource is not used.
-        // See comments in final_notes.txt
-        NetworkDatasource networkDatasource = new NetworkDatasourceImpl(getString(R.string.api_url));
-        NetworkDatasource fileDatasource = null;
-        try {
-            fileDatasource = new FileDatasourceImpl(getActivity().getAssets().open("static_result.txt"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        CacheDatasource cacheDatasource = new CacheDatasourceImpl(getActivity());
-        RepositoriesRepository repository = new RepositoriesRepositoryImpl(networkDatasource, cacheDatasource);
-
-        RequestRepositoriesInteractor interactor = new RequestRepositoriesInteractorImpl(repository);
-        mPresenter = new MainPresenterImpl(this, interactor);
+        RepositoryListComponent component = DaggerRepositoryListComponent.builder()
+                        .challengeAppComponent(ChallengeApp.get(getActivity()).component())
+                        .repositoryListModule(new RepositoryListModule(this))
+                        .build();
+        component.inject(this);
     }
 
     @Override
