@@ -1,0 +1,47 @@
+apply plugin: 'com.android.application'
+
+// Read auth values from external file
+//if(project.hasProperty("AuthFile.properties")
+//        && new File(project.property("AuthFile.properties")).exists()) {
+
+    Properties props = new Properties()
+    props.load(new FileInputStream(file(project.property("AuthFile.properties"))))
+
+
+//}
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "com.mccorby.testandroidmccorby"
+        minSdkVersion 14
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+
+
+    }
+    buildTypes {
+        debug {
+            buildConfigField "String" , "AUTH_TOKEN" , "\"" + props.get("token") + "\""
+            buildConfigField "String" , "AUTH_USERNAME" , "\"" + props.get("username") + "\""
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String" , "AUTH_TOKEN" , "\"" + props.get("token") + "\""
+            buildConfigField "String" , "AUTH_USERNAME" , "\"" + props.get("username") + "\""
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.squareup.okhttp:okhttp:2.3.0'
+    compile 'com.google.code.gson:gson:2.3'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.android.support:recyclerview-v7:21.0.3'
+}

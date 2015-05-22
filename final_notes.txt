@@ -1,0 +1,14 @@
+The app is built on a light version of clean architecture. I say "light" because due to time
+constraints I had to make some assumptions and add dependencies where there shouldn't be:
+- The same model is shared by all layers
+- DI is not done (could have used Dagger or Dagger2). Instead instantiations are done manually
+
+- Using Retrofit as network library. Though in the description of the test it is recommended not to
+use a library for this, I have done because it's been a while since I last used UrlConnection.
+    * Note that another NetworkDatasource could be implemented using this class and the rest of the
+    app would not notice
+
+- I couldn't make the authorization to github work.
+    * As I was running out of time and I wanted something working, I provided a txt file with the result of
+calling https://api.github.com/users/xing/repos.
+    * This has made the "Load more items" unavailable.
