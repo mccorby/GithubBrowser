@@ -23,3 +23,10 @@ list. Check the pagination documentation.
 - On a long click on a list item show a dialog to ask if go to repository `html_url` or
    owner `html_url` which is opened then in the browser.
 
+NOTE:
+You need to create a local file in the project's directory called AuthFile.properties (you can change the name in the gradle file).
+ In this file you have to define the following properties:
+ username: <your_github_username>
+ token: <basic_personal_access_token>
+
+ To obtain the personal access token see here https://github.com/blog/1509-personal-api-tokens
